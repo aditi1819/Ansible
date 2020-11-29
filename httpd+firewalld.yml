@@ -1,0 +1,42 @@
+- hosts: all
+  tasks:
+  - file:
+       state: directory
+       path: "/iso"
+  - mount:
+       src: "/dev/sr0"
+       path: "/iso"
+       state: mounted
+       fstype: "iso9660"
+  - yum_repository:
+       baseurl: "/iso/AppStream"
+       name: "mydvd1"
+       description: "from ansible 1"
+       gpgcheck: no
+  - yum_repository:
+       baseurl: "/iso/BaseOS"
+       name: "mydvd2"
+       description: "from ansible 2"
+       gpgcheck: no
+  - yum_repository:
+       baseurl: "https://download.docker.com/linux/centos/7/x86_64/stable/"
+       name: "docker"
+       description: "from ansible 3"
+       gpgcheck: no
+
+  - package:
+       name: "httpd"
+       state: present
+  - copy:
+       dest: "/var/www/html/index.html"
+       content: "this is webserver set from ansible"
+  - service:
+       name: "httpd"
+       state: started
+       enabled: yes
+  - firewalld:
+       port: 80/tcp
+       state: enabled
+       permanent: yes
+       immediate: yes
+~
