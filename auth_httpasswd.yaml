@@ -1,0 +1,36 @@
+---
+-
+  hosts: all
+  tasks:
+    -
+      package:
+        name: httpd
+    -
+      package:
+        name: python3
+    -
+      pip:
+        name: passlib
+    -
+      copy:
+        content: securedpage!!!
+        dest: /var/www/html/index.html
+    -
+      replace:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: "AllowOverride None"
+        replace: "AllowOverride AuthConfig"
+  -
+      copy:
+        dest: /var/www/html/.htaccess
+        src: .htaccess
+    -
+      htpasswd:
+        name: riya
+        password: "redhat"
+        path: /etc/www.passwd
+    -
+      service:
+        name: httpd
+        state: restarted
+       
